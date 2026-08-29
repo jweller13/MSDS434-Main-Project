@@ -1,0 +1,42 @@
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Users\jazzw> Invoke-RestMethod
+
+cmdlet Invoke-RestMethod at command pipeline position 1
+Supply values for the following parameters:
+Uri: https://msds434-main-project-546200181633.us-east4.run.app/health
+
+status
+------
+ok
+
+
+PS C:\Users\jazzw> $body = @{
+>>     product = "Checking or savings account"
+>>     subproduct = "Checking account"
+>>     issue = "Managing an account"
+>>     subissue = "Fee problem"
+>>     company_name = "BANK OF AMERICA, NATIONAL ASSOCIATION"
+>>     state = "VA"
+>>     submitted_via = "Web"
+>>     consumer_consent_provided = "Consent provided"
+>>     consumer_tags = $null
+>>     has_narrative = 1
+>>     narrative_character_count = 500
+>>     narrative_word_count = 90
+>>     month_received = 8
+>>     days_to_send_to_company = 2
+>> } | ConvertTo-Json
+PS C:\Users\jazzw>
+PS C:\Users\jazzw> Invoke-RestMethod `
+>>   -Uri "https://msds434-main-project-546200181633.us-east4.run.app/predict" `
+>>   -Method Post `
+>>   -ContentType "application/json" `
+>>   -Body $body
+
+predicted_monetary_relief probability threshold
+------------------------- ----------- ---------
+                     True      0.9768      0.75
+
+
+PS C:\Users\jazzw>
