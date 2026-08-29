@@ -1,0 +1,59 @@
+#standardSQL
+CREATE OR REPLACE MODEL
+  `msds-434-502817.cfpb_data.complaint_relief_model`
+
+OPTIONS(
+  model_type = 'LOGISTIC_REG',
+  input_label_cols = ['received_relief']
+)
+
+AS
+
+SELECT
+  IF(
+    company_response_to_consumer IN (
+      'Closed with monetary relief',
+      'Closed with non-monetary relief',
+      'Closed with relief'
+    ),
+    1,
+    0
+  ) AS received_relief,
+
+  IFNULL(product, 'Unknown') AS product,
+  IFNULL(subproduct, 'Unknown') AS subproduct,
+  IFNULL(issue, 'Unknown') AS issue,
+  IFNULL(subissue, 'Unknown') AS subissue,
+  IFNULL(company_name, 'Unknown') AS company_name,
+  IFNULL(state, 'Unknown') AS state,
+  IFNULL(submitted_via, 'Unknown') AS submitted_via,
+
+  IFNULL(
+    consumer_consent_provided,
+    'Unknown'
+  ) AS consumer_consent_provided,
+
+  IF(
+    consumer_complaint_narrative IS NULL,
+    0,
+    1
+  ) AS has_narrative,
+
+  IF(tags IS NULL, 0, 1) AS has_special_tag,
+
+  EXTRACT(YEAR FROM date_received) AS year_received,
+  EXTRACT(MONTH FROM date_received) AS month_received,
+
+  DATE_DIFF(
+    date_sent_to_company,
+    date_received,
+    DAY
+  ) AS days_to_send_to_company
+
+FROM
+  `bigquery-public-data.cfpb_complaints.complaint_database`
+
+WHERE
+  company_response_to_consumer IS NOT NULL
+  AND date_received BETWEEN
+    DATE '2018-01-01' AND DATE '2019-12-31';
