@@ -237,7 +237,11 @@ curl -X POST https://msds434-main-project-546200181633.us-east4.run.app/predict 
     "days_to_send_to_company": 2
   }'
 ```
+**Example request needs to be formatted like this**
 
+```json
+curl -X POST https://msds434-main-project-546200181633.us-east4.run.app/predict -H "Content-Type: application/json" -d "{\"product\":\"Checking or savings account\",\"subproduct\":\"Checking account\",\"issue\":\"Managing an account\",\"subissue\":\"Fee problem\",\"company_name\":\"BANK OF AMERICA, NATIONAL ASSOCIATION\",\"state\":\"VA\",\"submitted_via\":\"Web\",\"consumer_consent_provided\":\"Consent provided\",\"consumer_tags\":null,\"has_narrative\":1,\"narrative_character_count\":500,\"narrative_word_count\":90,\"month_received\":8,\"days_to_send_to_company\":2}"
+```
 ---
 
 ## Automated Deployment
